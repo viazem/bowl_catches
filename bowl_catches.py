@@ -2,11 +2,14 @@ import sys
 
 import pygame
 
+from settings import Settings
+
 
 def run_game():
     # Инициализируем игру и создаем объект экрана
     pygame.init()
-    screen = pygame.display.set_mode((1200, 800))
+    ai_settings = Settings()
+    screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
     pygame.display.set_caption("The bowl catches the flash drive")
 
     # Назначаем цвета фона
@@ -20,11 +23,10 @@ def run_game():
                 sys.exit()
 
         # При каждом проходе цикла перерисовывается экран
-        screen.fill(bg_color)
+        screen.fill(ai_settings.bg_color)
 
         # Отображение последнего прорисованного экрана.
         pygame.display.flip()
 
 
 run_game()
-
