@@ -4,6 +4,8 @@ import pygame
 
 from settings import Settings
 from bowl import Bowl
+import game_function as gf
+
 
 def run_game():
     # Инициализируем игру и создаем объект экрана
@@ -13,24 +15,19 @@ def run_game():
     pygame.display.set_caption("The bowl catches the flash drive")
 
     # Создание миски
-    bowl = Bowl(screen)
+    bowl = Bowl(ai_settings, screen)
 
     # Назначаем цвета фона
     bg_color = (230, 230, 230)
 
     # Запуск основного цикла игры
     while True:
-        # Отслеживани е событий клавиатуры и мыши
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-
+        # Отслеживани и событий клавиатуры и мыши
+        gf.check_events(bowl)
+        bowl.update()
         # При каждом проходе цикла перерисовывается экран
-        screen.fill(ai_settings.bg_color)
-        bowl.blitme()
-
         # Отображение последнего прорисованного экрана.
-        pygame.display.flip()
+        gf.update_screen(ai_settings, screen, bowl)
 
 
 run_game()
