@@ -51,11 +51,12 @@ def update_fleshka(ai_settings, bowl, fleshka):
     if fleshka.rect.bottom >= bowl.rect.y:
         print(f'fleshka.rect.x={fleshka.rect.x}, bowl.rect.x={bowl.rect.x}, fleshka.rect.right={fleshka.rect.right}')
         if (fleshka.rect.x <= bowl.rect.x <= fleshka.rect.right) or \
-                (fleshka.rect.x <= bowl.rect.right <= fleshka.rect.right):
+                (fleshka.rect.x <= bowl.rect.right <= fleshka.rect.right) or \
+                    (fleshka.rect.bottom >= ai_settings.screen_height):
             fleshka.rect.x = (fleshka.rect.width +
                               randint(0,
                                       (
-                                          fleshka.ai_settings.screen_width - fleshka.rect.width * 2
+                                              fleshka.ai_settings.screen_width - fleshka.rect.width * 2
                                       )
                                       )
                               )
@@ -63,10 +64,10 @@ def update_fleshka(ai_settings, bowl, fleshka):
                               randint(0,
                                       int(
                                           (
-                                              fleshka.ai_settings.screen_height - fleshka.rect.height * 2
+                                                  fleshka.ai_settings.screen_height - fleshka.rect.height * 2
                                           )
                                           / 2
-                                          )
+                                      )
                                       )
                               )
             fleshka.x = float(fleshka.rect.x)
