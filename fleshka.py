@@ -15,31 +15,25 @@ class Fleshka(Sprite):
         self.image = pygame.image.load('images/fleshka.png')
         self.rect = self.image.get_rect()
 
-        # Каждая флешка появляется в левом верхнем углу экрана
-        self.rect.x = (self.rect.width +
-                       randint(0,
-                               (
-                                   self.ai_settings.screen_width - self.rect.width * 2
-                               )
-                               )
-                       )
-        self.rect.y = (self.rect.height +
-                       randint(0,
-                               int(
-                                   (
-                                        self.ai_settings.screen_height - self.rect.height * 2
-                                   )
-                                   / 2
-                               )
-                               )
-                       )
-
-        # Сохранение вещественных координат центра флешки
-        self.x = float(self.rect.x)
-        self.y = float(self.rect.y)
+        # Каждая флешка появляется в случайной позиции экрана
+        self.reset_pos()
 
         # Промежуток времени до перемещения флешки
         self.time_move = 0.0
+
+    def reset_pos(self):
+        # Каждая флешка появляется в левом верхнем углу экрана
+        self.rect.x = (
+                self.rect.width +
+                randint(0,
+                        (self.ai_settings.screen_width - self.rect.width * 2)))
+        self.rect.y = (
+                self.rect.height +
+                randint(0,
+                        int((self.ai_settings.screen_height - self.rect.height * 2) / 2)))
+        # Сохранение вещественных координат центра флешки
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
 
     def blitme(self):
         """Выводит флешку в текущей позиции"""
@@ -52,6 +46,5 @@ class Fleshka(Sprite):
 
     def check_edges(self):
         """Возвращает True если флешка находится у края экрана"""
-        screen_rect = self.screen.get_rect()
-        if self.rect.bottom >= screen_rect.y:
+        if self.rect.bottom >= self.ai_settings.screen_height:
             return True

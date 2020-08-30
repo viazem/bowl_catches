@@ -22,8 +22,12 @@ class Bowl():
         self.moving_right = False
         self.moving_left = False
 
+    def center_bowl(self):
+        # каждая миска появляется у нижнего края экрана.
+        self.center = float(self.screen_rect.centerx)
+
     def update(self):
-        """Обновляет позицию корабля с учетом флага."""
+        """Обновляет позицию миска с учетом флага."""
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.center += self.ai_settings.ship_speed_factor
         if self.moving_left and self.rect.left > 0:
@@ -33,5 +37,5 @@ class Bowl():
         self.rect.centerx = self.center
 
     def blitme(self):
-        """Рисует корабль в текущей позиции."""
+        """Рисует корзину в текущей позиции."""
         self.screen.blit(self.image, self.rect)

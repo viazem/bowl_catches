@@ -1,6 +1,6 @@
 import sys
 import pygame
-from random import randint
+from time import sleep
 
 
 def check_keydown_events(event, bowl):
@@ -31,13 +31,45 @@ def check_events(bowl):
             check_keyup_events(event, bowl)
 
 
-def check_bottom_edges(ai_settings, fleshka):
+def check_bottom_edges(stats, bowl, fleshka):
     """Реагирует на достжении флешки края экрана внизу."""
+    # print(f'stats.ship_left = {stats.ship_left}')
     if fleshka.check_edges():
-        True
+        if stats.ship_left > 0:
+            stats.ship_left -= 1
+            fleshka.reset_pos()
+            ship_hit(stats, bowl, fleshka)
+        else:
+            stats.game_active = False
 
 
-def update_fleshka(ai_settings, bowl, fleshka):
+def catch_fleshka(ai_settings, bowl, fleshka):
+    """Определить попадание флешки в корзину."""
+    catch = False
+    # Проверка попадания в корзину
+    # Определим попала флешка в корзину
+    if fleshka.rect.bottom >= bowl.rect.y and (
+            (fleshka.rect.x <= bowl.rect.x <= fleshka.rect.right) or (
+             fleshka.rect.x <= bowl.rect.right <= fleshka.rect.right)):
+        # print(f'fleshka.rect.x={fleshka.rect.x}, bowl.rect.x={bowl.rect.x}, fleshka.rect.right={fleshka.rect.right}')
+        fleshka.reset_pos()
+        catch = True
+
+    return catch
+
+
+def ship_hit(stats, bowl, fleshka):
+    """Обрабатывает столкновение коризины и флешки"""
+
+    # Создание новой флешки и размещение корзины в центре
+    fleshka.reset_pos()
+    bowl.center_bowl()
+
+    # Пауза
+    sleep(0.5)
+
+
+def update_fleshka(ai_settings, stats, screen, bowl, fleshka):
     """
     Проверяет закончилось ли время перед следующим
     обновлением позиции
@@ -47,31 +79,12 @@ def update_fleshka(ai_settings, bowl, fleshka):
         fleshka.time_move = 0
         fleshka.update()
     # Проверка попадания в корзину
-    # Определим попала флешка в корзину
-    if fleshka.rect.bottom >= bowl.rect.y:
-        print(f'fleshka.rect.x={fleshka.rect.x}, bowl.rect.x={bowl.rect.x}, fleshka.rect.right={fleshka.rect.right}')
-        if (fleshka.rect.x <= bowl.rect.x <= fleshka.rect.right) or \
-                (fleshka.rect.x <= bowl.rect.right <= fleshka.rect.right) or \
-                    (fleshka.rect.bottom >= ai_settings.screen_height):
-            fleshka.rect.x = (fleshka.rect.width +
-                              randint(0,
-                                      (
-                                              fleshka.ai_settings.screen_width - fleshka.rect.width * 2
-                                      )
-                                      )
-                              )
-            fleshka.rect.y = (fleshka.rect.height +
-                              randint(0,
-                                      int(
-                                          (
-                                                  fleshka.ai_settings.screen_height - fleshka.rect.height * 2
-                                          )
-                                          / 2
-                                      )
-                                      )
-                              )
-            fleshka.x = float(fleshka.rect.x)
-            fleshka.y = float(fleshka.rect.y)
+    if catch_fleshka(ai_settings, bowl, fleshka):
+        print("Fleshka hit!!")
+        ship_hit(stats, bowl, fleshka)
+
+    check_bottom_edges(stats, bowl, fleshka)
+
 
 
 def update_screen(ai_settings, screen, bowl, fleshka):
